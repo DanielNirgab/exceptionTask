@@ -1,7 +1,7 @@
 package exceptions;
 
 public class WrongLoginException extends Exception {
-    public WrongLoginException() {
-        super();
+    public WrongLoginException(String msg) {
+        System.out.println(msg);
     }
 }

@@ -6,35 +6,29 @@ import java.util.regex.Pattern;
 
 public class LoginCheck {
 
-    private static boolean checkUserLogin (String login, String password, String confirmPassword) throws WrongLoginException, WrongPasswordException{
-        boolean matchLogin = login.matches("\\w*");
-        boolean matchPassword = password.matches("\\w*");
+    private static void checkUserLogin (String login, String password, String confirmPassword) throws WrongLoginException, WrongPasswordException{
+        boolean matchLogin = login.matches("\\w+");
+        boolean matchPassword = password.matches("\\w+");
         if (!matchLogin) {
-            System.out.println("Login содержит в себе только латинские буквы, цифры и знак подчеркивания");
-            return false;
-        } else if (login.length()> 20 || login.length()<=0) {
-            throw new WrongLoginException();
+            System.out.println();
+            throw new WrongLoginException("Login содержит в себе только латинские буквы, цифры и знак подчеркивания");
+        } else if (login.length()> 20 || login.isEmpty()) {
+            throw new WrongLoginException("Login есть ограничение по длине – он должен быть равен или меньше 20 символов");
         } else if (!matchPassword) {
-            System.out.println("Password содержит в себе только латинские буквы, цифры и знак подчеркивания");
-            return false;
-        } else if (password.length() <= 0 || password.length() > 20) {
-            System.out.println("password есть ограничение по длине – он должен быть равен или меньше 20 символов");
-            return false;
+            throw new WrongPasswordException("Password содержит в себе только латинские буквы, цифры и знак подчеркивания");
+        } else if (password.isEmpty() || password.length() > 20) {
+            throw new WrongPasswordException("password есть ограничение по длине – он должен быть равен или меньше 20 символов");
         } else if (!password.equals(confirmPassword)){
-            throw new WrongPasswordException();
-        } else {
-            return true;
+            throw new WrongPasswordException("Параметры password и confirmPassword должны быть равны");
         }
     }
 
-    public static void checker (String login, String password, String confirmPassword) {
+    public static boolean checker (String login, String password, String confirmPassword) {
         try {
             checkUserLogin(login, password, confirmPassword);
-            System.out.println("TRUE");
-        } catch (WrongLoginException e) {
-            System.out.println("Login есть ограничение по длине – он должен быть равен или меньше 20 символов");
-        } catch (WrongPasswordException e) {
-            System.out.println("Параметры password и confirmPassword должны быть равны");
+            return true;
+        } catch (WrongLoginException | WrongPasswordException e) {
+            return false;
         }
     }
 }
